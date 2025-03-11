@@ -1,0 +1,7 @@
+node_modules/
+.meteor/local/
+.meteor/packages/
+.meteor/.finished-upgraders
+.meteor/versions
+.DS_Store
+*.log
