@@ -1,15 +1,31 @@
 import { Meteor } from "meteor/meteor";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-export const LoginForm = () => {
+export const LoginForm = ({ currentUser }) => {
+
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
       
   const submit = (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    Meteor.loginWithPassword(username, password);
+    Meteor.loginWithPassword(username, password, (err) => {
+      setLoading(false);
+      if(err){
+        console.error("ERRO", err);
+      }
+    });
   };
+
+  useEffect(() => {
+    if(currentUser) {
+      navigate("/");
+    }
+  }, [currentUser, navigate]);
 
   return (
     <form onSubmit={submit} className="login-form">

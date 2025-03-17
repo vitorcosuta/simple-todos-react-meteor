@@ -1,102 +1,49 @@
 import { Meteor } from 'meteor/meteor';
-import React, { useState, Fragment } from "react";
-import { useTracker, useSubscribe } from "meteor/react-meteor-data";
-import { TasksCollection } from "/imports/api/TasksCollection";
-import { Task } from "./Task";
-import { TaskForm } from "./TaskForm";
+import React from "react";
+import { useTracker } from "meteor/react-meteor-data";
+import { Routes, Route } from 'react-router-dom';
+import { ProtectedRoute } from "./ProtectedRoute"
 import { LoginForm } from './LoginForm';
+import { PageLayout } from './PageLayout';
+import { Home } from './Home';
+import { NotFound } from './NotFound';
+import { TasksRoutes } from './TasksRoutes';
 
 export const App = () => {
 
   /** Tracker para o usuário */
   const user = useTracker(() => Meteor.user());
 
-  /** O hook useSubscribe retorna TRUE se a assinatura/inscrição ainda está
-   *  carregando, e FALSE se a assinatura já foi carregada e os dados estão
-   *  disponíveis.
-   */
-  const isLoading = useSubscribe('tasks');
+  // /** O hook useSubscribe retorna TRUE se a assinatura/inscrição ainda está
+  //  *  carregando, e FALSE se a assinatura já foi carregada e os dados estão
+  //  *  disponíveis.
+  //  */
+  // const isLoading = useSubscribe('tasks');
 
-  const logout = () => Meteor.logout();
+  // /** Contador para tasks pendentes */
+  // const pendingTasksCount = useTracker(() => {
 
-  const handleToggleChecked = ({ _id, isChecked }) =>
-    Meteor.callAsync('tasks.toggleChecked', { _id, isChecked });
+  //   if (!user) {
+  //     return 0;
+  //   }
 
-  const handleDelete = ({ _id }) =>
-    Meteor.callAsync('tasks.delete', {_id});
-
-  /** Implementando o filtro com variáveis de estado */
-  const [hideCompleted, setHideCompleted] = useState(false);
-  const hideCompletedFilter = { isChecked: {$ne: true} }; // $ne = not equal
-
-  const tasks = useTracker(() => {
-
-    if (!user) {
-      return [];
-    }
-
-    return TasksCollection.find(
-      hideCompleted ? hideCompletedFilter : {}, 
-      { sort: { createdAt: -1 } },
-    ).fetch();
-  });
-
-  /** Contador para tasks pendentes */
-  const pendingTasksCount = useTracker(() => {
-
-    if (!user) {
-      return 0;
-    }
-
-    return TasksCollection.find(hideCompletedFilter).count();
-  });
-
-  const pendingTasksTitle = `${pendingTasksCount ? ` (${pendingTasksCount})` : ''}`;
-
-  if (isLoading()){
-    return <div>Loading...</div>
-  }
+  //   return TasksCollection.find(hideCompletedFilter).count();
+  // });
 
   return (
-    <div className="app">
-      <header>
-        <div className="app-bar">
-          <div className="app-header">
-            <h1>
-              📝️ To Do List {pendingTasksTitle}
-            </h1>
-          </div>
-        </div>
-      </header>
-      <div className="main">
-        {user ? (
-          <Fragment>
-            <div className="user" onClick={logout}>
-              {user.username} 🚪
-            </div>
-            <TaskForm />
+  
+    <Routes>
+      <Route element={<PageLayout />}>
+        {/* Rotas que precisam de autenticação para serem acessadas */}
+        <Route element={<ProtectedRoute currentUser={user} />}>
+          <Route path='/' element={<Home />} />
+          <Route path='/tasks/*' element={<TasksRoutes />} />
+        </Route>
 
-            <div className="filter">
-              <button onClick={() => setHideCompleted(!hideCompleted)}>
-                {hideCompleted ? 'Show All' : 'Hide Completed'}
-              </button>
-            </div>
+        <Route path='/login' element={<LoginForm currentUser={user} />} />
 
-            <ul className="tasks">
-              {tasks.map(task => (
-                <Task
-                  key={task._id}
-                  task={task}
-                  onCheckboxClick={handleToggleChecked}
-                  onDeleteClick={handleDelete}
-                />
-              ))}
-            </ul>
-          </Fragment>
-          ) : (
-            <LoginForm />
-          )}
-      </div>
-    </div>
+        <Route path='*' element={<NotFound />}></Route>
+      </Route>
+    </Routes>
   );
 };
