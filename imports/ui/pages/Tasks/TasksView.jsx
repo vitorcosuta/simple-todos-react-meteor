@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import React, { Fragment } from 'react';
 import { useTracker } from "meteor/react-meteor-data";
+import { useSubscribe } from "meteor/react-meteor-data";
 import { TasksCollection } from "/imports/api/TasksCollection";
 import { useOutletContext } from 'react-router-dom';
 import { Task } from "../../components/Tasks/Task";
@@ -10,6 +11,8 @@ import Divider from '@mui/material/Divider';
 import { Typography } from '@mui/material';
 
 export const TasksView = () => {
+
+    const areTasksLoading = useSubscribe("tasks");
 
     const context = useOutletContext();
 
@@ -22,6 +25,10 @@ export const TasksView = () => {
 
     const handleDelete = ({ _id }) =>
         Meteor.callAsync('tasks.delete', {_id});
+
+    if (!areTasksLoading) return (
+        <p>CARREGANDO...</p>
+    );
 
     return (
 

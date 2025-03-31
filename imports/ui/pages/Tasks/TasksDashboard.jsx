@@ -1,6 +1,7 @@
 import React, { Fragment } from "react"
 import { useOutletContext } from "react-router-dom";
 import { useTracker } from "meteor/react-meteor-data";
+import { useSubscribe } from "meteor/react-meteor-data";
 import { TasksCollection } from "/imports/api/TasksCollection";
 import { Typography } from "@mui/material";
 import { Stack } from "@mui/material";
@@ -10,6 +11,8 @@ import { CommonBoxTitle } from "../../components/common/CommomBoxTitle";
 import { CommonAnchorDashboardBox } from "../../components/common/CommonAnchorDashboardBox";
 
 export const TasksDashboard = () => {
+
+    const areTasksLoading = useSubscribe("tasks");
 
     const context = useOutletContext();
 
@@ -29,6 +32,10 @@ export const TasksDashboard = () => {
 
     const completedTasksCount = useTracker(() =>
         TasksCollection.find(completedFilter).count()
+    );
+
+    if (!areTasksLoading) return (
+        <p>CARREGANDO...</p>
     );
 
     return (

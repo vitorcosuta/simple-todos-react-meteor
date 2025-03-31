@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useNavigate } from "react-router-dom";
 import { ListItem } from '@mui/material';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
@@ -36,6 +37,8 @@ const PositionedTaskMenu = ({ task, onDeleteClick }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
+  const navigate = useNavigate();
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -47,6 +50,11 @@ const PositionedTaskMenu = ({ task, onDeleteClick }) => {
   const handleDeleteClick = (task) => {
     handleClose();
     onDeleteClick(task);
+  }
+
+  const handleEditClick = (task) => {
+    handleClose();
+    navigate(`/tasks/edit/${task._id}`);
   }
 
   return (
@@ -73,7 +81,7 @@ const PositionedTaskMenu = ({ task, onDeleteClick }) => {
           horizontal: 'left',
         }}
       >
-        <MenuItem onClick={handleClose}>Editar</MenuItem>
+        <MenuItem onClick={ () => handleEditClick(task) }>Editar</MenuItem>
         <MenuItem onClick={ () => handleDeleteClick(task) }>Remover</MenuItem>
       </Menu>
     </div>
