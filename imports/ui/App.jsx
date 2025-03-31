@@ -3,7 +3,7 @@ import React from "react";
 import { useTracker } from "meteor/react-meteor-data";
 import { Routes, Route } from 'react-router-dom';
 import { ProtectedRoute } from "./routes/ProtectedRoute"
-import { LoginForm } from './pages/Login/LoginForm';
+import { Login } from './pages/Login/Login';
 import { PageLayout } from './routes/PageLayout';
 import { Home } from './pages/Home/Home';
 import { NotFound } from './pages/NotFound/NotFound';
@@ -26,7 +26,7 @@ export const App = () => {
           <Route path='/tasks/*' element={<TasksRoutes />} />
         </Route>
 
-        <Route path='/login' element={<LoginForm currentUser={user} />} />
+        <Route path='/login' element={<Login />} />
 
         <Route path='*' element={<NotFound />}></Route>
       </Route>
