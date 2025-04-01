@@ -4,11 +4,14 @@ import { TasksCollection } from '../imports/api/TasksCollection';
 import "../imports/api/TasksPublications";
 import "../imports/api/tasksMethods";
 
+const INITIAL_TASK_STATUS = 'Cadastrada';
+
 const insertTask = (taskText, user) =>
   TasksCollection.insertAsync({
     text: taskText,
     userId: user._id,
     createdAt: new Date(),
+    status: INITIAL_TASK_STATUS,
   });
 
 const SEED_USERNAME = 'meteorite';

@@ -11,3 +11,10 @@ Meteor.publish("tasks", function () {
 
   return TasksCollection.find({ userId });
 });
+
+Meteor.publish("pendingTasks", function (hideCompleted) {
+
+  const filter = hideCompleted ? { status: { $ne: 'Concluída' } } : {};
+
+  return TasksCollection.find(filter);
+});

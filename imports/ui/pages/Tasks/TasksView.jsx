@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { ReactiveVar } from "meteor/reactive-var";
 import React, { Fragment } from 'react';
 import { useTracker } from "meteor/react-meteor-data";
 import { useSubscribe } from "meteor/react-meteor-data";
@@ -6,25 +7,32 @@ import { TasksCollection } from "/imports/api/TasksCollection";
 import { useOutletContext } from 'react-router-dom';
 import { Task } from "../../components/Tasks/Task";
 import { TaskForm } from "../../components/Tasks/TaskForm"
+import { CommonCheckbox } from '../../components/common/CommomCheckbox';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
-import { Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
+
+const hideCompletedVar = new ReactiveVar(false);
 
 export const TasksView = () => {
 
-    const areTasksLoading = useSubscribe("tasks");
+    const hideCompleted = useTracker(() => hideCompletedVar.get());
+
+    const areTasksLoading = useSubscribe("pendingTasks", hideCompleted);
 
     const context = useOutletContext();
 
     const user = context.userData;
 
     const tasks = useTracker(() => TasksCollection.find(
-        { userId: user._id },
+        {},
         { sort: { createdAt: -1 } }
     ).fetch());
 
     const handleDelete = ({ _id }) =>
         Meteor.callAsync('tasks.delete', {_id});
+
+    const handleCompletedCheckboxChange = () => hideCompletedVar.set(!hideCompleted);
 
     if (!areTasksLoading) return (
         <p>CARREGANDO...</p>
@@ -43,9 +51,14 @@ export const TasksView = () => {
 
             <TaskForm />
 
+            <CommonCheckbox 
+                label='Exibir concluídas'
+                onChange={handleCompletedCheckboxChange}
+            />
+
             <List
                 sx={{
-                    width: '40%',
+                    width: '80%',
                     margin: 'auto',
                 }}
             >
