@@ -5,7 +5,7 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 
-export const CommonSelect = ({ value, label, options ,onChange }) => {
+export const CommonSelect = ({ value, label, options, onChange }) => {
 
     return (
         <FormControl sx={{ flex: 1, minWidth: 0 }}>

@@ -9,20 +9,27 @@ import Box from '@mui/material/Box';
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 
-  const MONTH_LIST = [
-    'Janeiro',
-    'Fevereiro',
-    'Março',
-    'Abril',
-    'Maio',
-    'Junho',
-    'Julho',
-    'Agosto',
-    'Setembro',
-    'Outubro',
-    'Novembro',
-    'Dezembro'
-  ];
+const MONTH_LIST = [
+  'Janeiro',
+  'Fevereiro',
+  'Março',
+  'Abril',
+  'Maio',
+  'Junho',
+  'Julho',
+  'Agosto',
+  'Setembro',
+  'Outubro',
+  'Novembro',
+  'Dezembro'
+];
+
+const GENDER_LIST = [
+  'Masculino',
+  'Feminino',
+  'Outro',
+  'Prefiro não dizer'
+];
 
 export const SignupForm = () => {
 
@@ -34,6 +41,7 @@ export const SignupForm = () => {
   const [day, setDay] = useState('');
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
+  const [gender, setGender] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [signupError, setSignupError] = useState('');
@@ -61,6 +69,8 @@ export const SignupForm = () => {
   const handleMonthChange = (e) => setMonth(e.target.value);
 
   const handleYearChange = (e) => setYear(e.target.value);
+
+  const handleGenderChange = (e) => setGender(e.target.value);
 
   const handlePasswordChange = (e) => setPassword(e.target.value);  
 
@@ -125,6 +135,13 @@ export const SignupForm = () => {
             onChange={handleYearChange}
           />
         </Box>
+
+        <CommonSelect
+          value={gender}
+          label={'Gênero'}
+          options={GENDER_LIST}
+          onChange={handleGenderChange}
+        />
         
         <CommonPasswordFormInput 
           value={password} 
