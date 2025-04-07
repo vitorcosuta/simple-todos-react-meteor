@@ -18,8 +18,10 @@ export const CommonTextButton = ({ children, onClick }) => {
                 "&:hover": {
                     backgroundColor: '#f2f2f2',  // Cor do fundo ao passar o mouse
                 },
-                mr: 1,
                 ml: 1,
+                mr: 1,
+                mb: 2,
+                mt: 2,
             }}
         >
             <Typography 
