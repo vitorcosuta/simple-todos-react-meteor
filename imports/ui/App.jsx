@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import React, { Fragment } from "react";
-import { useTracker } from "meteor/react-meteor-data";
+import { useTracker, useSubscribe } from "meteor/react-meteor-data";
 import { Routes, Route } from 'react-router-dom';
 import { ProtectedRoute } from "./routes/ProtectedRoute"
 import { GlobalStyles } from "@mui/material";
@@ -16,8 +16,10 @@ import '@fontsource/source-sans-pro/700.css';
 
 export const App = () => {
 
-  /** Tracker para o usuário */
-  const user = useTracker(() => Meteor.user());
+  const user = useTracker(() => {
+    const isUserLoading = useSubscribe("currentUser");
+    return Meteor.user();
+  });
 
   return (
     <Fragment>

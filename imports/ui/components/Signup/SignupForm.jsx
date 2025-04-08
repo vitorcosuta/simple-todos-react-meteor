@@ -1,6 +1,6 @@
 import { Meteor } from "meteor/meteor";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { replace, useNavigate } from "react-router-dom";
 import { CommonFormInput } from "../common/CommonFormInput";
 import { CommonSelect } from "../common/CommonSelect";
 import { CommonPasswordFormInput } from "../common/CommonPasswordFormInput";
@@ -45,17 +45,53 @@ export const SignupForm = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [signupError, setSignupError] = useState('');
+  const [signupSuccess, setSignupSuccess] = useState(false);
        
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
     setSignupError('');
 
-    const login = () => {
-      
+    // Convertendo os dados do aniversário para data
+    const dayInt = parseInt(day);
+    const monthInt = MONTH_LIST.indexOf(month);
+    const yearInt = parseInt(year);
+
+    const birthdate = new Date(yearInt, monthInt, dayInt);
+
+    const signup = async () => {
+      try {
+        await Meteor.callAsync('users.signup', {
+          name,
+          email, 
+          company, 
+          birthdate, 
+          gender, 
+          password
+        });
+
+        // Limpar os dados do formulário
+        setName('');
+        setEmail('');
+        setCompany('');
+        setDay('');
+        setMonth('');
+        setYear('');
+        setGender('');
+        setPassword('');
+
+        setSignupSuccess(true); // Habilitar aviso de sucesso
+        
+        setTimeout(() => navigate('/login', { replace: true }), 1000)
+
+      } catch (err) {
+        setSignupError(err.reason);
+      } finally {
+        setLoading(false);
+      }
     }
 
-    setTimeout(login, 1000);
+    setTimeout(signup, 1000);
   };
 
   const handleNameChange = (e) => setName(e.target.value);
@@ -149,7 +185,11 @@ export const SignupForm = () => {
         />
 
         {signupError && (
-          <Alert severity="error" sx={{ marginBottom: 2 }}>Dados inválidos.</Alert>
+          <Alert severity="error">{signupError}</Alert>
+        )}
+
+        {signupSuccess && (
+          <Alert severity="success">Usuário cadastrado com sucesso!</Alert>
         )}
 
         <Button
