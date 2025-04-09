@@ -1,6 +1,6 @@
 import { Meteor } from "meteor/meteor";
 import React, { useState } from "react";
-import { replace, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CommonFormInput } from "../common/CommonFormInput";
 import { CommonSelect } from "../common/CommonSelect";
 import { CommonPasswordFormInput } from "../common/CommonPasswordFormInput";
@@ -204,7 +204,7 @@ export const SignupForm = () => {
           type="submit" 
           variant="contained"
         >
-          {loading ? <CircularProgress size={24} color="inherit" /> : "Entrar"}
+          {loading ? <CircularProgress size={24} color="inherit" /> : "Cadastrar"}
         </Button>
       </Box>
   );

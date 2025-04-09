@@ -1,18 +1,12 @@
 import { Meteor } from "meteor/meteor";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { CommonFormInput } from "../common/CommonFormInput";
+import { CommonPasswordFormInput } from "../common/CommonPasswordFormInput";
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
 import Button from "@mui/material/Button";
-import InputAdornment from '@mui/material/InputAdornment';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from "@mui/material/FormLabel";
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import LockIcon from '@mui/icons-material/Lock';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 
 export const LoginForm = () => {
@@ -21,7 +15,6 @@ export const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState('');
        
   const handleSubmit = (e) => {
@@ -49,88 +42,63 @@ export const LoginForm = () => {
 
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const handleMouseDownPassword = (e) => {
-    e.preventDefault();
-  };
-
-  const handleMouseUpPassword = (e) => {
-    e.preventDefault();
-  };
-
   return (
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        width: '20vw',
+        backgroundColor: 'white',
+        padding: 2,
+        borderRadius: 2,
+        mt: '5%'
+      }}
+    >
+      <Typography 
+        variant="h4"
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          width: '90%',
-          margin: 'auto',
+            whiteSpace: 'pre-line',
+            fontFamily: 'source-sans-pro-latin-400-normal, sans-serif',
+            color: '#262423',
         }}
       >
-        <FormControl>
-          <FormLabel>E-mail</FormLabel>
-          <OutlinedInput 
-            id="outlined-adornment-email"
-            placeholder="Insira seu e-mail"
-            value={email}
-            startAdornment={
-              <InputAdornment position="start">
-                <AccountCircle />
-              </InputAdornment>
-            }
-            onChange={handleEmailChange}
-          />
-        </FormControl>
+      Autenticar-se
+      </Typography>
 
-        <FormControl variant="outlined">
-          <FormLabel>Senha</FormLabel>
-          <OutlinedInput
-            id="outlined-adornment-password"
-            placeholder="Insira sua senha"
-            value={password}
-            type={showPassword ? 'text' : 'password'}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label={
-                    showPassword ? 'hide the password' : 'display the password'
-                  }
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  onMouseUp={handleMouseUpPassword}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-            startAdornment={
-              <InputAdornment position="start">
-                <LockIcon />
-              </InputAdornment>
-            }
-            onChange={handlePasswordChange}
-          />
-        </FormControl>
+      <CommonFormInput
+        value={email}
+        label={'E-mail'}
+        placeholder={'Insira seu e-mail'}
+        onChange={handleEmailChange}
+      />
+      
+      <CommonPasswordFormInput 
+        value={password} 
+        onChange={handlePasswordChange}
+      />
 
-        {loginError && (
-          <Alert severity="error" sx={{ marginBottom: 2 }}>Dados inválidos.</Alert>
-        )}
+      {loginError && (
+        <Alert severity="error">Dados inválidos!</Alert>
+      )}
 
-        <Button
-          sx={{ 
-            width: '20%',
-            mx: 'auto',
-           }}
-          type="submit" 
-          variant="contained"
-        >
-          {loading ? <CircularProgress size={24} color="inherit" /> : "Entrar"}
-        </Button>
-      </Box>
+      <Button
+        sx={{
+          width: '100%',
+          mx: 'auto',
+          borderRadius: '999px',
+          fontWeight: 'bold',
+          paddingX: 3,
+          paddingY: 1,
+          backgroundColor: '#56021F',
+          }}
+        type="submit" 
+        variant="contained"
+      >
+        {loading ? <CircularProgress size={24} color="inherit" /> : "Entrar"}
+      </Button>
+    </Box>
   );
 };

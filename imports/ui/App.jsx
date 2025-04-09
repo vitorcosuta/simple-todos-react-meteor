@@ -16,10 +16,7 @@ import '@fontsource/source-sans-pro/700.css';
 
 export const App = () => {
 
-  const user = useTracker(() => {
-    const isUserLoading = useSubscribe("currentUser");
-    return Meteor.user();
-  });
+  const user = useTracker(() => Meteor.user());
 
   return (
     <Fragment>

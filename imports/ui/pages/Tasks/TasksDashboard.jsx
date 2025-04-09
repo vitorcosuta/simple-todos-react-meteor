@@ -1,4 +1,4 @@
-import React, { Fragment } from "react"
+import React, { Fragment, useEffect, useState } from "react"
 import { useOutletContext } from "react-router-dom";
 import { useTracker } from "meteor/react-meteor-data";
 import { useSubscribe } from "meteor/react-meteor-data";
@@ -9,22 +9,26 @@ import { CommonBoxDescription } from "../../components/common/CommonBoxDescripti
 import { CommonBox } from "../../components/common/CommonBox";
 import { CommonBoxTitle } from "../../components/common/CommomBoxTitle";
 import { CommonAnchorDashboardBox } from "../../components/common/CommonAnchorDashboardBox";
+import { CommonLoadingScreen } from "../../components/common/CommonLoadingScreen";
+import { CommonDrawer } from "../../components/common/CommonDrawer";
 
 export const TasksDashboard = () => {
 
     const areTasksLoading = useSubscribe("tasks");
 
-    const context = useOutletContext();
+    const user = useOutletContext();
 
-    const user = context.userData;
+    const name = user?.profile?.name;
+    const email = user?.emails[0]?.address;
+    const photo = user?.profile?.photo;
 
     const registeredTasksCount = useTracker(() => 
         TasksCollection.find().count()
     );
 
     /** Implementando os filtros */
-    const notCompletedFilter = { isChecked: { $ne: true } }
-    const completedFilter = { isChecked: true }
+    const notCompletedFilter = { status: 'Em andamento' }
+    const completedFilter = { status: 'Concluída' }
 
     const pendingTasksCount = useTracker(() =>
         TasksCollection.find(notCompletedFilter).count()
@@ -35,16 +39,17 @@ export const TasksDashboard = () => {
     );
 
     if (!areTasksLoading) return (
-        <p>CARREGANDO...</p>
+        <CommonLoadingScreen />
     );
 
     return (
         <Fragment>
+            <CommonDrawer userName={name} userEmail={email} userPhoto={photo} />
             <Typography
                 variant='h5'
                 margin='auto'
             >
-                Olá {user.username}, seja bem-vindo ao ToDo List!
+                Olá {user?.profile?.name}, seja bem-vindo ao ToDo List!
             </Typography>
             
             <Stack direction="row" spacing={40} margin='auto'>
