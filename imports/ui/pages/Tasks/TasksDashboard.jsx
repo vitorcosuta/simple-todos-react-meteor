@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { TasksCollection } from "/imports/api/TasksCollection";
 import Box from '@mui/material/Box';
 import { CommonLoadingScreen } from "../../components/common/CommonLoadingScreen";
-import { CommonDrawer } from "../../components/common/CommonDrawer";
+import { CommonPermanentDrawer } from "../../components/common/CommonPermanentDrawer";
 import { CommonDashboardCard } from "../../components/common/CommonDashboardCard";
 import { CommonButtonCard } from "../../components/common/CommonButtonCard";
 
@@ -53,7 +53,7 @@ export const TasksDashboard = () => {
                 height: '100vh',
             }}
         >
-            <CommonDrawer userName={name} userEmail={email} userPhoto={photo} />
+            <CommonPermanentDrawer userName={name} userEmail={email} userPhoto={photo} />
             
             <Box
                 sx={{

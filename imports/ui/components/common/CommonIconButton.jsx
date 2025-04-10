@@ -1,23 +1,17 @@
 import React from "react";
-import Button from "@mui/material/Button";
+import IconButton from '@mui/material/IconButton';
 
-export const CommonIconButton = ({ children, icon, onClick }) => {
+export const CommonIconButton = ({ children, onClick }) => {
 
     return (
-        <Button
-            variant="contained"
-            color="error"
-            startIcon={icon}
-            onClick={onClick}
+        <IconButton 
             sx={{
-                mt: 2,
-                py: 2,
-                fontSize: '1.2rem',
-                fontWeight: 'bold',
-                backgroundColor: '#d16d67'
+                width: 40,
+                height: 40,
             }}
+            onClick={onClick}
         >
             {children}
-        </Button>
+        </IconButton>
     );
 };

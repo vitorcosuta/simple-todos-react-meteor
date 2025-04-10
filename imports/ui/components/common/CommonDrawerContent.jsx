@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
+import React, { Fragment, useState } from "react";
 import { Meteor } from 'meteor/meteor';
 import Avatar from '@mui/material/Avatar';
 import Button from "@mui/material/Button";
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
-import Drawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -14,11 +13,11 @@ import { CommonSnackbar } from './CommonSnackbar';
 import { CommonNavbarList } from './CommonNavbarList';
 import { useNavigate } from "react-router-dom";
 
-export const CommonDrawer = ({ userName, userEmail, userPhoto }) => {
+export const CommonDrawerContent = ({ userName, userEmail, userPhoto }) => {
 
     const navigate = useNavigate();
 
-    const returnToHomepage = () => navigate('/')
+    const returnToHomepage = () => navigate('/', { replace: true });
 
     const [snackbarOpen, setSnackbarOpen] = useState(false);
 
@@ -43,18 +42,7 @@ export const CommonDrawer = ({ userName, userEmail, userPhoto }) => {
     }
 
     return (
-        <Drawer
-            variant='permanent'
-            anchor='left'
-            sx={{
-                width: { xs: '64px', sm: '15vw' },
-                flexShrink: 0,
-                '& .MuiDrawer-paper': {
-                  width: { xs: '64px', sm: '15vw' },
-                  boxSizing: 'border-box',
-                },
-              }}
-        >
+        <Fragment>
             <Toolbar>
                 <Box 
                     component="img" 
@@ -138,6 +126,6 @@ export const CommonDrawer = ({ userName, userEmail, userPhoto }) => {
                     onClose={handleClose}
                 />
             </Box>
-        </Drawer>
+        </Fragment>
     );
 };

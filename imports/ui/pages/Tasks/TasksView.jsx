@@ -12,6 +12,7 @@ import { CommonCheckbox } from '../../components/common/CommomCheckbox';
 import { Task } from "../../components/Tasks/Task";
 import { TaskForm } from "../../components/Tasks/TaskForm"
 import { CommonLoadingScreen } from '../../components/common/CommonLoadingScreen';
+import { CommonDrawerHeader } from '../../components/common/CommonDrawerHeader';
 
 const hideCompletedVar = new ReactiveVar(false);
 
@@ -46,7 +47,7 @@ export const TasksView = () => {
     return (
 
         <Fragment>
-
+            <CommonDrawerHeader currentUser={currentUser} />
             <Typography 
                 variant='h5'
                 margin='auto'
