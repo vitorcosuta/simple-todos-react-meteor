@@ -20,9 +20,7 @@ export const TasksView = () => {
 
     const areTasksLoading = useSubscribe("pendingTasks", hideCompleted);
 
-    const context = useOutletContext();
-
-    const user = context.userData;
+    const user = useOutletContext();
 
     const tasks = useTracker(() => TasksCollection.find(
         {},
