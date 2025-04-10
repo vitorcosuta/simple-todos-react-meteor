@@ -1,4 +1,5 @@
 import React from "react";
+import { Meteor } from 'meteor/meteor';
 import { useNavigate } from "react-router-dom";
 import { HomeLoginButton } from "./HomeLoginButton";
 import { CommonTextButton } from "../common/CommomTextButton";
@@ -10,7 +11,15 @@ export const HomeHeader = () => {
 
     const navigate = useNavigate();
 
-    const handleLoginClick = () => navigate('/login');
+    const handleLoginClick = () => {
+        
+        if(Meteor.userId()){
+            navigate('/tasks/dashboard');
+        }else{
+            navigate('/login');
+        }
+    };
+
     const handleSignupClick = () => navigate('/signup');
 
     return (
