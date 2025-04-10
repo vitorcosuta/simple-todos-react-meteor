@@ -21,7 +21,7 @@ const taskStatuses = [
   'Concluída',
 ];
 
-export const Task = ({ task, username, onDeleteClick }) => {
+export const Task = ({ task, username, currentUserId, onDeleteClick }) => {
 
   const status = task?.status ?? '';
 
@@ -38,6 +38,8 @@ export const Task = ({ task, username, onDeleteClick }) => {
         status: selectedStatus,
     });
   };
+
+  const decideDisabledUpdates = !(task.userId === currentUserId);
 
   const decideDisabledOptions = (selectedStatus) => {
     if (taskStatus === 'Cadastrada' && selectedStatus === 'Concluída') {
@@ -68,6 +70,7 @@ export const Task = ({ task, username, onDeleteClick }) => {
           value={taskStatus}
           onChange={handleSelectChange}
           input={<OutlinedInput label="Status" />}
+          disabled={decideDisabledUpdates}
         >
           {taskStatuses.map((status) => (
             <MenuItem 
@@ -82,13 +85,14 @@ export const Task = ({ task, username, onDeleteClick }) => {
       </FormControl>
       <PositionedTaskMenu
         task={task}
+        disabled={decideDisabledUpdates}
         onDeleteClick={onDeleteClick}
       />
     </ListItem>
   );
 };
 
-const PositionedTaskMenu = ({ task, onDeleteClick }) => {
+const PositionedTaskMenu = ({ task, disabled, onDeleteClick }) => {
 
   const [anchorEl, setAnchorEl] = useState(null);
   
@@ -138,8 +142,19 @@ const PositionedTaskMenu = ({ task, onDeleteClick }) => {
           horizontal: 'left',
         }}
       >
-        <MenuItem onClick={ () => handleEditClick(task) }>Editar</MenuItem>
-        <MenuItem onClick={ () => handleDeleteClick(task) }>Remover</MenuItem>
+        <MenuItem 
+          onClick={ () => handleEditClick(task) } 
+          disabled={disabled}
+        >
+          Editar
+        </MenuItem>
+        
+        <MenuItem 
+          onClick={ () => handleDeleteClick(task) }
+          disabled={disabled}
+        >
+          Remover
+        </MenuItem>
       </Menu>
     </div>
   );

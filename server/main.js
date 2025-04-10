@@ -4,6 +4,7 @@ import { TasksCollection } from '../imports/api/TasksCollection';
 import { defaultUserIcon } from '../imports/api/defaultUserIcon';
 import "../imports/api/TasksPublications";
 import "../imports/api/tasksMethods";
+import "../imports/api/UsersPublications";
 import "../imports/api/usersMethods";
 
 const INITIAL_TASK_STATUS = 'Cadastrada';
