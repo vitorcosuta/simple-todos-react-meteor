@@ -2,17 +2,17 @@ import React, { Fragment, useEffect, useState } from "react"
 import { useOutletContext } from "react-router-dom";
 import { useTracker } from "meteor/react-meteor-data";
 import { useSubscribe } from "meteor/react-meteor-data";
+import { useNavigate } from "react-router-dom";
 import { TasksCollection } from "/imports/api/TasksCollection";
-import { Typography } from "@mui/material";
-import { Stack } from "@mui/material";
-import { CommonBoxDescription } from "../../components/common/CommonBoxDescription";
-import { CommonBox } from "../../components/common/CommonBox";
-import { CommonBoxTitle } from "../../components/common/CommomBoxTitle";
-import { CommonAnchorDashboardBox } from "../../components/common/CommonAnchorDashboardBox";
+import Box from '@mui/material/Box';
 import { CommonLoadingScreen } from "../../components/common/CommonLoadingScreen";
 import { CommonDrawer } from "../../components/common/CommonDrawer";
+import { CommonDashboardCard } from "../../components/common/CommonDashboardCard";
+import { CommonButtonCard } from "../../components/common/CommonButtonCard";
 
 export const TasksDashboard = () => {
+
+    const navigate = useNavigate();
 
     const areTasksLoading = useSubscribe("tasks");
 
@@ -42,39 +42,51 @@ export const TasksDashboard = () => {
         <CommonLoadingScreen />
     );
 
+    const handleClick = () => navigate('/tasks/view')
+
     return (
-        <Fragment>
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                width: '100vw',
+                height: '100vh',
+            }}
+        >
             <CommonDrawer userName={name} userEmail={email} userPhoto={photo} />
-            <Typography
-                variant='h5'
-                margin='auto'
-            >
-                Olá {user?.profile?.name}, seja bem-vindo ao ToDo List!
-            </Typography>
             
-            <Stack direction="row" spacing={40} margin='auto'>
-                <Stack direction="column" spacing={10} margin="auto">
-                    <CommonBox>
-                        <CommonBoxDescription>Total de tarefas cadastradas</CommonBoxDescription>
-                        <CommonBoxTitle>{registeredTasksCount}</CommonBoxTitle>
-                    </CommonBox>
-
-                    <CommonBox>
-                        <CommonBoxDescription>Total de tarefas pendentes</CommonBoxDescription>
-                        <CommonBoxTitle>{pendingTasksCount}</CommonBoxTitle>
-                    </CommonBox>
-                </Stack>
-
-                <Stack direction="column" spacing={10} margin="auto">
-                    <CommonBox>
-                        <CommonBoxDescription>Total de tarefas concluídas</CommonBoxDescription>
-                        <CommonBoxTitle>{completedTasksCount}</CommonBoxTitle>
-                    </CommonBox>
-                    <CommonAnchorDashboardBox
-                        goto={'/tasks/view'}
-                    >Visualizar tarefas</CommonAnchorDashboardBox>
-                </Stack>
-            </Stack>
-        </Fragment>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-evenly',
+                    alignContent: 'flex-start',
+                    width: '85%',
+                    height: '100%',
+                    pt: '15vh',
+                    rowGap: 8,
+                    columnGap: 4,
+                    backgroundColor: '#f2dcd8'
+                }}
+            >
+                <CommonDashboardCard 
+                    title='Tarefas cadastradas' 
+                    metric={registeredTasksCount} 
+                />
+                <CommonDashboardCard 
+                    title='Tarefas em andamento' 
+                    metric={pendingTasksCount} 
+                />
+                <CommonDashboardCard 
+                    title='Tarefas concluídas' 
+                    metric={completedTasksCount} 
+                />
+                <CommonButtonCard 
+                    title='Visualizar tarefas'
+                    onClick={handleClick}
+                />
+            </Box>
+        </Box>
     );
 }
