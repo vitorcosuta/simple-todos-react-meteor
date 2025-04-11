@@ -12,7 +12,13 @@ Meteor.publish("tasks", function () {
 
 Meteor.publish("pendingTasks", function (hideCompleted) {
 
-  const filter = hideCompleted ? { status: { $ne: 'Concluída' } } : {};
+  const filter = {
+    ... (hideCompleted ? { status: { $ne: 'Concluída' } } : {}),
+    $or: [
+      { userId: this.userId },      // Tarefas do usuário atual
+      { isPersonal: false }          // Tarefas públicas
+    ]
+  };  
 
   return TasksCollection.find(filter);
 });

@@ -15,6 +15,7 @@ const insertTask = (taskText, user) =>
     userId: user._id,
     createdAt: new Date(),
     status: INITIAL_TASK_STATUS,
+    isPersonal: false,
   });
 
 const SEED_EMAIL = 'admin@exemplo.com';

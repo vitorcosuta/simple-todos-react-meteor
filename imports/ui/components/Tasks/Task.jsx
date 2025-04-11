@@ -14,6 +14,8 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 const taskStatuses = [
   'Cadastrada',
@@ -95,7 +97,7 @@ export const Task = ({ task, username, currentUserId, onDeleteClick }) => {
 const PositionedTaskMenu = ({ task, disabled, onDeleteClick }) => {
 
   const [anchorEl, setAnchorEl] = useState(null);
-  
+
   const open = Boolean(anchorEl);
 
   const navigate = useNavigate();
@@ -116,6 +118,14 @@ const PositionedTaskMenu = ({ task, disabled, onDeleteClick }) => {
   const handleEditClick = (task) => {
     handleClose();
     navigate(`/tasks/edit/${task._id}`);
+  }
+
+  const handleCheckboxChange = async (task) => {
+    handleClose();
+    await Meteor.callAsync('tasks.changePrivacy', {
+        _id: task._id,
+        isPersonal: task.isPersonal,
+    });
   }
 
   return (
@@ -154,6 +164,20 @@ const PositionedTaskMenu = ({ task, disabled, onDeleteClick }) => {
           disabled={disabled}
         >
           Remover
+        </MenuItem>
+
+        <MenuItem
+          disabled={disabled}
+        >
+          <FormControlLabel 
+            control={
+              <Checkbox
+                checked={task.isPersonal}
+                onChange={ () => handleCheckboxChange(task) }
+                size='small' />
+            } 
+            label="Pessoal"
+          />
         </MenuItem>
       </Menu>
     </div>
