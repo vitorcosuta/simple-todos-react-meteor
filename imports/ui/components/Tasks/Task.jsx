@@ -63,7 +63,7 @@ export const Task = ({ task, username, currentUserId, onDeleteClick }) => {
         </Avatar>
       </ListItemAvatar>
       <ListItemText 
-        primary={task.text} 
+        primary={task.name} 
         secondary={username}
       />
       <FormControl sx={{ width: '20%' }}>
