@@ -23,9 +23,9 @@ const SEED_PASSWORD = 'senha123';
 
 Meteor.startup(async () => {
 
-    let existingUser = await Accounts.findUserByEmail(SEED_EMAIL)
+    let user = await Accounts.findUserByEmail(SEED_EMAIL)
 
-    if (!existingUser) {
+    if (!user) {
         const userId = Accounts.createUser({
             email: SEED_EMAIL,
             password: SEED_PASSWORD,
@@ -38,7 +38,10 @@ Meteor.startup(async () => {
             }
         });
 
-        existingUser = Meteor.users.findOneAsync(userId);
+        while (!user) {
+            user = await Meteor.users.findOneAsync(userId);
+            if (!user) await new Promise((resolve) => setTimeout(resolve, 50));
+        }
     }
 
     if ((await TasksCollection.find().countAsync()) === 0){
@@ -50,6 +53,6 @@ Meteor.startup(async () => {
         "Fifth Task",
         "Sixth Task",
         "Seventh Task",
-    ].forEach((taskName) => insertTask(taskName, existingUser));
+    ].forEach((taskName) => insertTask(taskName, user));
     }
 });
