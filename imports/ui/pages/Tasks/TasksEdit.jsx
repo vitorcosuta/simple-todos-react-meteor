@@ -3,7 +3,7 @@ import { useSubscribe } from "meteor/react-meteor-data";
 import { useParams } from "react-router-dom";
 import { useTracker } from "meteor/react-meteor-data";
 import { TasksCollection } from "/imports/api/TasksCollection";
-import { TaskEditForm } from "../../components/Tasks/TaskEditForm";
+import { EditTaskForm } from "../../components/Tasks/EditTaskForm";
 
 export const TasksEdit = () => {
 
@@ -18,6 +18,6 @@ export const TasksEdit = () => {
     );
 
     return (
-        <TaskEditForm task={task} />
+        <EditTaskForm task={task} />
     );
 }

@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import { Meteor } from 'meteor/meteor';
+import React, { Fragment, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from '@mui/material/Typography';
@@ -15,39 +17,54 @@ import timezone from "dayjs/plugin/timezone";
 dayjs.extend(utc);
 dayjs.extend(timezone)
 
-const today = dayjs();
+const today = dayjs().utc();
 const todayStartOfTheDay = today.startOf('day');
 
-export const AddTaskForm = ({ setOpen }) => {
+export const EditTaskForm = ({ task }) => {
 
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [date, setDate] = useState(today);
+    const navigate = useNavigate();
 
-    const isToday = date.isSame(today, 'day');
+    const name = task?.name ?? '';
+    const description = task?.description ?? '';
+    const date = dayjs(task?.date) ?? today;
+
+    const [inputName, setInputName] = useState(name);
+    const [inputDescription, setInputDescription] = useState(description);
+    const [inputDate, setInputDate] = useState(date);
+
+    const isToday = inputDate.isSame(today, 'day');
+
+    useEffect(() => {
+        setInputName(name);
+        setInputDescription(description);
+        setInputDate(date);
+    }, [task]);
 
     const handleSubmit = async (e) => {
-
         e.preventDefault();
 
-        let mergedDate = date.utc().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
+        console.log(inputDate);
 
-        if (!name || !date) return;
+        let mergedDate = inputDate.utc().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
 
-        await Meteor.callAsync('tasks.insert', {
-            name: name.trim(),
-            description: description,
-            date: mergedDate,
-            createdAt: new Date(),
+        if (!inputName || !mergedDate) return;
+
+        console.log(mergedDate);
+
+        await Meteor.callAsync('tasks.update', {
+            _id: task._id,
+            newText: inputName,
+            newDescription: inputDescription,
+            newDate: mergedDate,
         });
 
-        setOpen(false);
+        navigate('/tasks/view', { replace: true });
     };
 
-    const handleNameChange = (e) => setName(e.target.value);
-    const handleDescriptionChange = (e) => setDescription(e.target.value);
-    const handleDateChange = (newDate) => setDate(newDate);
-    const handleCancelClick = () => setOpen(false);
+    const handleNameChange = (e) => setInputName(e.target.value);
+    const handleDescriptionChange = (e) => setInputDescription(e.target.value);
+    const handleDateChange = (newDate) => setInputDate(newDate);
+    const handleCancelClick = () => navigate('/tasks/view');
 
     const disableTimePicking = (timeValue, view) => {
         
@@ -76,21 +93,22 @@ export const AddTaskForm = ({ setOpen }) => {
                 display: "flex",
                 flexDirection: "column",
                 gap: 2,
-                width: '100%',
+                width: '80vw',
                 margin: 'auto',
+                pt: 10,
             }}
         >
-            <Typography variant='h5'>Adicionar tarefa</Typography>
-
+            <Typography variant='h5'>Editar tarefa: {task?.name}</Typography>
+            
             <CommonFormInput
-                value={name} 
+                value={inputName} 
                 label='Nome'
                 placeholder={'Insira o nome da tarefa'}
                 onChange={handleNameChange}
             />
 
             <CommonFormTextbox
-                value={description}
+                value={inputDescription}
                 label='Descrição'
                 onChange={handleDescriptionChange}
             />
@@ -105,13 +123,13 @@ export const AddTaskForm = ({ setOpen }) => {
                 >
                     <CommonDatePicker 
                         defaultValue={today}
-                        value={date}
+                        value={inputDate}
                         onChange={handleDateChange}
                     />
 
                     <CommonTimePicker
                         defaultValue={todayStartOfTheDay}
-                        value={date}
+                        value={inputDate}
                         onChange={handleDateChange}
                         disableFunc={disableTimePicking}
                     />
@@ -126,7 +144,7 @@ export const AddTaskForm = ({ setOpen }) => {
                 }}
             >
                 <Button type="submit" variant="contained">
-                    Criar tarefa
+                    Salvar
                 </Button>
 
                 <Button 
@@ -137,7 +155,6 @@ export const AddTaskForm = ({ setOpen }) => {
                     Cancelar
                 </Button>
             </Box>
-
-        </Box>
+        </Box> 
     );
-};
+}
