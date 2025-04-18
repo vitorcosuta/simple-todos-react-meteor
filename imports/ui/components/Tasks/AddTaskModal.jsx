@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Box from '@mui/material/Box';
 import { AddTaskForm } from "./AddTaskForm";
 
-export const AddTaskModal = () => {
+export const AddTaskModal = ({ getCount }) => {
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -17,7 +17,16 @@ export const AddTaskModal = () => {
 
     return (
         <Fragment>
-            <IconButton onClick={handleOpen}>
+            <IconButton 
+                onClick={handleOpen} 
+                sx={{ 
+                    bgcolor: '#7b343f',
+                    color: 'white',
+                    '&:hover':{
+                        bgcolor: '#f3998e'
+                    },
+                }}
+            >
                 <AddIcon />
             </IconButton>
 
@@ -34,7 +43,7 @@ export const AddTaskModal = () => {
                         borderRadius: 2,
                     }}
                 >
-                    <AddTaskForm setOpen={setOpen} />
+                    <AddTaskForm setOpen={setOpen} getCount={getCount} />
                 </Box>
             </Modal>
         </Fragment>

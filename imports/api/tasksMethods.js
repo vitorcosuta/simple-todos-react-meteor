@@ -34,4 +34,7 @@ Meteor.methods({
             }
         });
     },
+    "tasks.count"(filter) {
+        return TasksCollection.find(filter).countAsync();
+    },
 });
