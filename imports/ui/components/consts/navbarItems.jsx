@@ -27,6 +27,6 @@ export const mainNavbarItems = [
         id: 3,
         icon: <AccountBoxIcon />,
         label: 'Meus Dados',
-        routes: '/profile/view'
+        route: '/profile/view'
     },
 ];
