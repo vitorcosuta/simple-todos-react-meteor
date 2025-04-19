@@ -39,7 +39,7 @@ export const TasksView = () => {
         searchTerm,
     };
 
-    const areTasksLoading = useSubscribe("tasks", filterParams);
+    const areTasksLoading = useSubscribe("filteredTasks", filterParams);
     const areUsersLoading = useSubscribe("allUsers");
 
     const currentUser = useOutletContext();
