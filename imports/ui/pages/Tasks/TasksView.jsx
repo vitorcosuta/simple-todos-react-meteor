@@ -15,6 +15,7 @@ import { Task } from "../../components/Tasks/Task";
 import { CommonLoadingScreen } from '../../components/common/CommonLoadingScreen';
 import { CommonDrawerHeader } from '../../components/common/CommonDrawerHeader';
 import { AddTaskModal } from '../../components/Tasks/AddTaskModal';
+import { CommonSearchBar } from '../../components/common/CommonSearchBar';
 
 const PAGE_SIZE = 4;
 const hideCompletedVar = new ReactiveVar(false);
@@ -23,6 +24,7 @@ export const TasksView = () => {
 
     const [page, setPage] = useState(1);
     const [totalTasks, setTotalTasks] = useState(0);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const hideCompleted = useTracker(() => hideCompletedVar.get());
 
@@ -30,7 +32,14 @@ export const TasksView = () => {
         return Math.ceil(totalTasks / PAGE_SIZE);
     }, [totalTasks]);
 
-    const areTasksLoading = useSubscribe("pendingTasks", { page, pageSize: PAGE_SIZE, hideCompleted });
+    const filterParams = {
+        page,
+        pageSize: PAGE_SIZE,
+        hideCompleted,
+        searchTerm,
+    };
+
+    const areTasksLoading = useSubscribe("tasks", filterParams);
     const areUsersLoading = useSubscribe("allUsers");
 
     const currentUser = useOutletContext();
@@ -41,8 +50,11 @@ export const TasksView = () => {
         }).fetch();
     });
 
+    const regex = new RegExp(searchTerm, 'i');
+
     const filter = {
         ...(hideCompleted ? { status: { $ne: 'Concluída' } } : {}),
+        ...(searchTerm ? { name: { $regex: regex } } : {}),
         $or: [
             { userId: this.userId },      // Tarefas do usuário atual
             { isPersonal: false }          // Tarefas públicas
@@ -56,11 +68,11 @@ export const TasksView = () => {
     
     useEffect(() => {
         getCount();
-    }, [hideCompleted]);
+    }, [tasks]);
 
     useEffect(() => {
         if (page > totalPages && totalPages > 0) {
-          setPage(totalPages);
+            setPage(totalPages);
         }
     }, [totalPages, page]);
 
@@ -71,11 +83,14 @@ export const TasksView = () => {
 
     const handleDelete = ({ _id }) => {
         Meteor.callAsync('tasks.delete', {_id});
-        getCount();
     };
 
     const handleCompletedCheckboxChange = () => {
         hideCompletedVar.set(!hideCompleted);
+    };
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
     };
 
     const handlePageChange = (event, value) => setPage(value);
@@ -105,7 +120,7 @@ export const TasksView = () => {
                         whiteSpace: 'pre-line',
                         fontFamily: 'source-sans-pro-latin-400-normal, sans-serif',
                         color: '#262423',
-                        mb: 4,
+                        mb: 10,
                     }}
                 >
                     Tarefas cadastradas
@@ -118,14 +133,17 @@ export const TasksView = () => {
                             display: 'flex',
                             flexDirection: 'row',
                             justifyContent: 'space-between',
+                            alignItems: 'center',
                         }}
                     >
+                        <AddTaskModal />
+
                         <CommonCheckbox 
                             label='Exibir concluídas'
                             onChange={handleCompletedCheckboxChange}
                         />
 
-                        <AddTaskModal getCount={getCount} />
+                        <CommonSearchBar onChange={handleSearchChange} value={searchTerm} />
                     </Box>
 
                     <List>

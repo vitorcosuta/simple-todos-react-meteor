@@ -18,7 +18,7 @@ dayjs.extend(timezone)
 const today = dayjs();
 const todayStartOfTheDay = today.startOf('day');
 
-export const AddTaskForm = ({ setOpen, getCount }) => {
+export const AddTaskForm = ({ setOpen }) => {
 
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -42,7 +42,6 @@ export const AddTaskForm = ({ setOpen, getCount }) => {
         });
 
         setOpen(false);
-        getCount();
     };
 
     const handleNameChange = (e) => setName(e.target.value);
