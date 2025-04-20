@@ -41,5 +41,26 @@ Meteor.methods({
                 photo: defaultUserIcon
             }
         });
-    }
+    },
+    "users.update"({ name, email, birthdate, gender, company, photo }) {
+        
+        if (!this.userId) throw new Meteor.Error('not-authorized', 'Sem autorização');
+
+        check(name, String);
+        check(email, String);
+        check(company, String);
+        check(birthdate, Date);
+        check(gender, String);
+
+        Meteor.users.updateAsync(this.userId, {
+            $set: {
+                'profile.name': name,
+                'emails.0.address': email,
+                'profile.company': company,
+                'profile.gender': gender,
+                'profile.birthdate': birthdate,
+                'profile.photo': photo
+            }
+        });
+    },
 });
