@@ -3,7 +3,9 @@ import { useSubscribe } from "meteor/react-meteor-data";
 import { useParams } from "react-router-dom";
 import { useTracker } from "meteor/react-meteor-data";
 import { TasksCollection } from "/imports/api/TasksCollection";
+import Box from "@mui/material/Box";
 import { EditTaskForm } from "../../components/Tasks/EditTaskForm";
+import { CommonLoadingScreen } from "../../components/common/CommonLoadingScreen";
 
 export const TasksEdit = () => {
 
@@ -14,10 +16,21 @@ export const TasksEdit = () => {
     const task = useTracker(() => TasksCollection.findOne({ _id: id }));
 
     if (!areTasksLoading) return (
-        <p>CARREGANDO...</p>
+        <CommonLoadingScreen />
     );
 
     return (
-        <EditTaskForm task={task} />
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                width: '100vw',
+                height: '100vh',
+                backgroundColor: '#f2dcd8',
+            }}
+        >
+            <EditTaskForm task={task} />
+        </Box>
     );
 }

@@ -93,9 +93,11 @@ export const EditTaskForm = ({ task }) => {
                 display: "flex",
                 flexDirection: "column",
                 gap: 2,
-                width: '80vw',
-                margin: 'auto',
-                pt: 10,
+                width: '80%',
+                borderRadius: '20px',
+                backgroundColor: 'white',
+                p: 4,
+                mt: '10vh',
             }}
         >
             <Typography variant='h5'>Editar tarefa: {task?.name}</Typography>
