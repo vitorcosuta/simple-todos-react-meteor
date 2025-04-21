@@ -25,7 +25,7 @@ export const ProfileView = () => {
                     flexDirection: 'column',
                     alignItems: 'center',
                     width: '100%',
-                    pt: '15vh',
+                    pt: '10vh',
                 }}
             >
                 <Box
